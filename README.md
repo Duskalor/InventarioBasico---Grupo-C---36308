@@ -1,6 +1,8 @@
 # 📦 InventarioBasico
 
-Sistema de control de inventario por consola en **Java puro**, sin dependencias externas. Ideal para aprender los fundamentos de POO en Java: clases, herencia, excepciones personalizadas, validación de datos y separación en capas.
+Sistema de control de inventario por consola en **Java puro**, sin dependencias externas, desarrollado como proyecto académico en la **Universidad Continental** (Carrera de Ingeniería de Sistemas e Informática).
+
+El objetivo es aplicar y afianzar los fundamentos de la Programación Orientada a Objetos en Java: clases, herencia, excepciones personalizadas, validación de datos y separación en capas (arquitectura limpia por niveles de responsabilidad). El sistema permite administrar productos de un inventario (alta, baja, búsqueda y control de stock) garantizando la integridad de los datos mediante validaciones de dominio robustas.
 
 ## ✨ Funcionalidades
 
@@ -97,3 +99,20 @@ java -cp bin Main
 - [ ] Interfaz gráfica (Swing/JavaFX)
 - [ ] Migración a Maven/Gradle
 - [ ] Conexión a base de datos
+
+## 👥 Equipo de Desarrollo
+
+Proyecto desarrollado por estudiantes de la **Universidad Continental** como parte de actividades académicas y de investigación.
+
+### Integrantes
+
+- Jack Michel Congache Rodriguez
+- Israel Ariel Fernandez León
+- Ryuka Kusi Qoyllor Caceres Aoki
+- Paul Antonio Cruz Conde
+
+### Institución
+
+**Universidad Continental**
+Facultad de Ingeniería
+Carrera de Ingeniería de Sistemas e Informática
