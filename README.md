@@ -38,8 +38,11 @@ src/
 ## 🚀 Cómo ejecutar
 
 ```bash
-# Compilar
+# Compilar (Linux/macOS)
 javac -d bin src/**/*.java
+
+# Compilar (Windows - PowerShell)
+javac -d bin (Get-ChildItem -Recurse src/*.java).FullName
 
 # Ejecutar
 java -cp bin Main
@@ -49,13 +52,36 @@ java -cp bin Main
 
 ## 🔐 Validaciones incluidas
 
-- Código y nombre obligatorios
-- Precio debe ser mayor a cero
-- Stock no puede ser negativo
-- Cantidad a aumentar/disminuir debe ser mayor a cero
-- No se permiten códigos duplicados
-- No se puede disminuir stock por debajo de 0
+### Campos obligatorios
+- Código y nombre no pueden estar vacíos ni ser solo espacios
+
+### Código
+- Solo permite letras, números, guiones (`-`) y guiones bajos (`_`)
+- Longitud máxima: 20 caracteres
+- No se permiten códigos duplicados (búsqueda case-insensitive)
+- Búsqueda flexible con `equalsIgnoreCase`
+
+### Nombre
+- Longitud mínima: 2 caracteres
+- Longitud máxima: 100 caracteres
+
+### Precio
+- Debe ser mayor que cero
+- No puede exceder 999,999.99
+- No puede tener más de 2 decimales
+
+### Stock
+- No puede ser negativo
+- No puede exceder 999,999 unidades
+- Control de overflow al aumentar (no permite superar el máximo)
+
+### Cantidad (aumentar/disminuir)
+- Debe ser mayor que cero
+- No puede exceder 999,999
+
+### Entrada de usuario (consola)
 - Protección contra entrada inválida en números (letras no rompen el programa)
+- Validación con reintento hasta ingresar un valor correcto
 
 ## 🧠 Decisiones técnicas
 
