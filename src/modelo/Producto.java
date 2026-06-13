@@ -1,48 +1,41 @@
 package modelo;
 
 public class Producto {
-
-    private String codigo;
+    private int id;
     private String nombre;
+    private String categoria;
     private double precio;
     private int stock;
+    private int stockMinimo;
 
-    public Producto(String codigo, String nombre, double precio, int stock) {
-        this.codigo = codigo;
+    public Producto(int id, String nombre, String categoria, double precio, int stock, int stockMinimo) {
+        this.id = id;
         this.nombre = nombre;
+        this.categoria = categoria;
         this.precio = precio;
         this.stock = stock;
+        this.stockMinimo = stockMinimo;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
+    public int getId() { return id; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) { this.precio = precio; }
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+    public int getStockMinimo() { return stockMinimo; }
+    public void setStockMinimo(int stockMinimo) { this.stockMinimo = stockMinimo; }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void aumentarStock(int cantidad) {
-        this.stock += cantidad;
-    }
-
-    public void disminuirStock(int cantidad) {
-        this.stock -= cantidad;
+    public double calcularValorInventario() {
+        return precio * stock;
     }
 
     @Override
     public String toString() {
-        return "Código: " + codigo
-                + " | Nombre: " + nombre
-                + " | Precio: S/ " + precio
-                + " | Stock: " + stock;
+        return String.format("ID: %d | Producto: %s | Categoría: %s | Precio: S/ %.2f | Stock: %d | Stock mínimo: %d | Valor: S/ %.2f",
+                id, nombre, categoria, precio, stock, stockMinimo, calcularValorInventario());
     }
 }

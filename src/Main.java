@@ -1,20 +1,20 @@
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-import excepciones.DatoInvalidoException;
-import excepciones.ProductoDuplicadoException;
-import excepciones.ProductoNoEncontradoException;
-import excepciones.StockInsuficienteException;
-import modelo.MovimientoInventario;
 import modelo.Producto;
 import servicio.InventarioService;
+import servicio.ProductoService;
+import servicio.ReporteService;
 
 public class Main {
-
     private static final Scanner scanner = new Scanner(System.in);
-    private static final InventarioService inventarioService = new InventarioService();
+    private static final ProductoService productoService = new ProductoService();
+    private static final InventarioService inventarioService = new InventarioService(productoService);
+    private static final ReporteService reporteService = new ReporteService(productoService, inventarioService);
 
     public static void main(String[] args) {
+        productoService.cargarDatosIniciales();
         int opcion;
 
         do {
@@ -22,177 +22,159 @@ public class Main {
             opcion = leerEntero("Seleccione una opción: ");
 
             switch (opcion) {
-                case 1:
-                    registrarProducto();
-                    break;
-                case 2:
-                    listarProductos();
-                    break;
-                case 3:
-                    buscarProducto();
-                    break;
-                case 4:
-                    aumentarStock();
-                    break;
-                case 5:
-                    disminuirStock();
-                    break;
-                case 6:
-                    eliminarProducto();
-                    break;
-                case 7:
-                    verMovimientos();
-                    break;
-                case 0:
-                    System.out.println("Saliendo del sistema...");
-                    break;
-                default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
-                    break;
+                case 1 -> crearProducto();
+                case 2 -> listarProductos();
+                case 3 -> buscarProducto();
+                case 4 -> actualizarProducto();
+                case 5 -> eliminarProducto();
+                case 6 -> registrarEntrada();
+                case 7 -> registrarSalida();
+                case 8 -> listarMovimientos();
+                case 9 -> menuReportes();
+                case 0 -> System.out.println("Saliendo del sistema...");
+                default -> System.out.println("Opción inválida.");
             }
-
         } while (opcion != 0);
-
-        scanner.close();
     }
 
     private static void mostrarMenu() {
-        System.out.println("\n===== SISTEMA DE CONTROL DE INVENTARIO =====");
-        System.out.println("1. Registrar producto");
+        System.out.println("\n=== Sistema de Control de Inventarios v1.2 ===");
+        System.out.println("1. Crear producto");
         System.out.println("2. Listar productos");
-        System.out.println("3. Buscar producto por código");
-        System.out.println("4. Aumentar stock");
-        System.out.println("5. Disminuir stock");
-        System.out.println("6. Eliminar producto");
-        System.out.println("7. Ver movimientos de inventario");
+        System.out.println("3. Buscar producto por ID");
+        System.out.println("4. Actualizar producto");
+        System.out.println("5. Eliminar producto");
+        System.out.println("6. Registrar entrada de stock");
+        System.out.println("7. Registrar salida de stock");
+        System.out.println("8. Ver movimientos de inventario");
+        System.out.println("9. Reportes");
         System.out.println("0. Salir");
     }
 
-    private static void registrarProducto() {
-        try {
-            System.out.println("\n--- Registrar producto ---");
+    private static void crearProducto() {
+        System.out.println("\n--- Crear producto ---");
+        String nombre = leerTexto("Nombre: ");
+        String categoria = leerTexto("Categoría: ");
+        double precio = leerDecimal("Precio: ");
+        int stock = leerEntero("Stock inicial: ");
+        int stockMinimo = leerEntero("Stock mínimo: ");
 
-            String codigo = leerTexto("Código: ");
-            String nombre = leerTexto("Nombre: ");
-            double precio = leerDecimal("Precio: ");
-            int stock = leerEntero("Stock inicial: ");
-
-            Producto producto = new Producto(codigo, nombre, precio, stock);
-            inventarioService.registrarProducto(producto);
-
-            System.out.println("Producto registrado correctamente.");
-
-        } catch (ProductoDuplicadoException | DatoInvalidoException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        Producto producto = productoService.crearProducto(nombre, categoria, precio, stock, stockMinimo);
+        System.out.println("Producto creado: " + producto);
     }
 
     private static void listarProductos() {
         System.out.println("\n--- Lista de productos ---");
-
-        List<Producto> productos = inventarioService.listarProductos();
-
+        List<Producto> productos = productoService.listarProductos();
         if (productos.isEmpty()) {
             System.out.println("No hay productos registrados.");
             return;
         }
-
-        for (Producto producto : productos) {
-            System.out.println(producto);
-        }
+        productos.forEach(System.out::println);
     }
 
     private static void buscarProducto() {
-        try {
-            System.out.println("\n--- Buscar producto ---");
-
-            String codigo = leerTexto("Ingrese el código del producto: ");
-            Producto producto = inventarioService.buscarProductoPorCodigo(codigo);
-
-            System.out.println("Producto encontrado:");
-            System.out.println(producto);
-
-        } catch (ProductoNoEncontradoException | DatoInvalidoException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        int id = leerEntero("Ingrese ID del producto: ");
+        productoService.buscarPorId(id)
+                .ifPresentOrElse(System.out::println, () -> System.out.println("Producto no encontrado."));
     }
 
-    private static void aumentarStock() {
-        try {
-            System.out.println("\n--- Aumentar stock ---");
+    private static void actualizarProducto() {
+        System.out.println("\n--- Actualizar producto ---");
+        int id = leerEntero("ID del producto: ");
+        String nombre = leerTexto("Nuevo nombre: ");
+        String categoria = leerTexto("Nueva categoría: ");
+        double precio = leerDecimal("Nuevo precio: ");
+        int stockMinimo = leerEntero("Nuevo stock mínimo: ");
 
-            String codigo = leerTexto("Código del producto: ");
-            int cantidad = leerEntero("Cantidad a aumentar: ");
-            String motivo = leerTexto("Motivo: ");
-
-            inventarioService.aumentarStock(codigo, cantidad, motivo);
-
-            System.out.println("Stock actualizado correctamente.");
-
-        } catch (ProductoNoEncontradoException | DatoInvalidoException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+        boolean actualizado = productoService.actualizarProducto(id, nombre, categoria, precio, stockMinimo);
+        System.out.println(actualizado ? "Producto actualizado correctamente." : "Producto no encontrado.");
     }
 
-    private static void disminuirStock() {
-        try {
-            System.out.println("\n--- Disminuir stock ---");
-
-            String codigo = leerTexto("Código del producto: ");
-            int cantidad = leerEntero("Cantidad a disminuir: ");
-            String motivo = leerTexto("Motivo: ");
-
-            inventarioService.disminuirStock(codigo, cantidad, motivo);
-
-            System.out.println("Stock actualizado correctamente.");
-
-        } catch (ProductoNoEncontradoException | StockInsuficienteException | DatoInvalidoException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+    private static void eliminarProducto() {
+        int id = leerEntero("ID del producto a eliminar: ");
+        boolean eliminado = productoService.eliminarProducto(id);
+        System.out.println(eliminado ? "Producto eliminado correctamente." : "Producto no encontrado.");
     }
 
-    private static void verMovimientos() {
+    private static void registrarEntrada() {
+        int productoId = leerEntero("ID del producto: ");
+        int cantidad = leerEntero("Cantidad de entrada: ");
+        String motivo = leerTexto("Motivo: ");
+        boolean registrado = inventarioService.registrarEntrada(productoId, cantidad, motivo);
+        System.out.println(registrado ? "Entrada registrada correctamente." : "No se pudo registrar la entrada.");
+    }
+
+    private static void registrarSalida() {
+        int productoId = leerEntero("ID del producto: ");
+        int cantidad = leerEntero("Cantidad de salida: ");
+        String motivo = leerTexto("Motivo: ");
+        boolean registrado = inventarioService.registrarSalida(productoId, cantidad, motivo);
+        System.out.println(registrado ? "Salida registrada correctamente." : "No se pudo registrar la salida.");
+    }
+
+    private static void listarMovimientos() {
         System.out.println("\n--- Movimientos de inventario ---");
-
-        List<MovimientoInventario> movimientos = inventarioService.listarMovimientos();
-
+        var movimientos = inventarioService.listarMovimientos();
         if (movimientos.isEmpty()) {
             System.out.println("No hay movimientos registrados.");
             return;
         }
-
-        for (MovimientoInventario movimiento : movimientos) {
-            System.out.println(movimiento);
-        }
+        movimientos.forEach(System.out::println);
     }
 
-    private static void eliminarProducto() {
-        try {
-            System.out.println("\n--- Eliminar producto ---");
+    private static void menuReportes() {
+        int opcion;
+        do {
+            System.out.println("\n--- Menú de reportes ---");
+            System.out.println("1. Valor total del inventario");
+            System.out.println("2. Productos con stock bajo");
+            System.out.println("3. Productos sin stock");
+            System.out.println("4. Cantidad de productos por categoría");
+            System.out.println("5. Stock total por categoría");
+            System.out.println("0. Volver");
+            opcion = leerEntero("Seleccione una opción: ");
 
-            String codigo = leerTexto("Código del producto: ");
-            inventarioService.eliminarProducto(codigo);
+            switch (opcion) {
+                case 1 -> System.out.printf("Valor total del inventario: S/ %.2f%n", reporteService.calcularValorTotalInventario());
+                case 2 -> imprimirListaProductos(reporteService.listarProductosConStockBajo(), "No hay productos con stock bajo.");
+                case 3 -> imprimirListaProductos(reporteService.listarProductosSinStock(), "No hay productos sin stock.");
+                case 4 -> imprimirMapaLong(reporteService.contarProductosPorCategoria());
+                case 5 -> imprimirMapaInteger(reporteService.sumarStockPorCategoria());
+                case 0 -> System.out.println("Volviendo al menú principal...");
+                default -> System.out.println("Opción inválida.");
+            }
+        } while (opcion != 0);
+    }
 
-            System.out.println("Producto eliminado correctamente.");
-
-        } catch (ProductoNoEncontradoException | DatoInvalidoException e) {
-            System.out.println("Error: " + e.getMessage());
+    private static void imprimirListaProductos(List<Producto> productos, String mensajeVacio) {
+        if (productos.isEmpty()) {
+            System.out.println(mensajeVacio);
+            return;
         }
+        productos.forEach(System.out::println);
+    }
+
+    private static void imprimirMapaLong(Map<String, Long> mapa) {
+        mapa.forEach((categoria, cantidad) -> System.out.println(categoria + ": " + cantidad + " producto(s)"));
+    }
+
+    private static void imprimirMapaInteger(Map<String, Integer> mapa) {
+        mapa.forEach((categoria, cantidad) -> System.out.println(categoria + ": " + cantidad + " unidad(es)"));
     }
 
     private static String leerTexto(String mensaje) {
         System.out.print(mensaje);
-        return scanner.nextLine();
+        return scanner.nextLine().trim();
     }
 
     private static int leerEntero(String mensaje) {
         while (true) {
             try {
                 System.out.print(mensaje);
-                int valor = Integer.parseInt(scanner.nextLine());
-                return valor;
+                return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Debe ingresar un número entero válido.");
+                System.out.println("Ingrese un número entero válido.");
             }
         }
     }
@@ -201,10 +183,9 @@ public class Main {
         while (true) {
             try {
                 System.out.print(mensaje);
-                double valor = Double.parseDouble(scanner.nextLine());
-                return valor;
+                return Double.parseDouble(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Debe ingresar un número decimal válido.");
+                System.out.println("Ingrese un número decimal válido.");
             }
         }
     }
