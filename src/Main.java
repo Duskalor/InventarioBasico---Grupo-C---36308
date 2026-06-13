@@ -5,6 +5,7 @@ import excepciones.DatoInvalidoException;
 import excepciones.ProductoDuplicadoException;
 import excepciones.ProductoNoEncontradoException;
 import excepciones.StockInsuficienteException;
+import modelo.MovimientoInventario;
 import modelo.Producto;
 import servicio.InventarioService;
 
@@ -39,6 +40,9 @@ public class Main {
                 case 6:
                     eliminarProducto();
                     break;
+                case 7:
+                    verMovimientos();
+                    break;
                 case 0:
                     System.out.println("Saliendo del sistema...");
                     break;
@@ -60,6 +64,7 @@ public class Main {
         System.out.println("4. Aumentar stock");
         System.out.println("5. Disminuir stock");
         System.out.println("6. Eliminar producto");
+        System.out.println("7. Ver movimientos de inventario");
         System.out.println("0. Salir");
     }
 
@@ -118,8 +123,9 @@ public class Main {
 
             String codigo = leerTexto("Código del producto: ");
             int cantidad = leerEntero("Cantidad a aumentar: ");
+            String motivo = leerTexto("Motivo: ");
 
-            inventarioService.aumentarStock(codigo, cantidad);
+            inventarioService.aumentarStock(codigo, cantidad, motivo);
 
             System.out.println("Stock actualizado correctamente.");
 
@@ -134,13 +140,29 @@ public class Main {
 
             String codigo = leerTexto("Código del producto: ");
             int cantidad = leerEntero("Cantidad a disminuir: ");
+            String motivo = leerTexto("Motivo: ");
 
-            inventarioService.disminuirStock(codigo, cantidad);
+            inventarioService.disminuirStock(codigo, cantidad, motivo);
 
             System.out.println("Stock actualizado correctamente.");
 
         } catch (ProductoNoEncontradoException | StockInsuficienteException | DatoInvalidoException e) {
             System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void verMovimientos() {
+        System.out.println("\n--- Movimientos de inventario ---");
+
+        List<MovimientoInventario> movimientos = inventarioService.listarMovimientos();
+
+        if (movimientos.isEmpty()) {
+            System.out.println("No hay movimientos registrados.");
+            return;
+        }
+
+        for (MovimientoInventario movimiento : movimientos) {
+            System.out.println(movimiento);
         }
     }
 

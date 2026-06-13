@@ -27,8 +27,9 @@ Carrera de Ingeniería de Sistemas e Informática
 - **Registrar producto** — alta con validación de datos (código único, nombre, precio, stock)
 - **Listar productos** — vista completa del inventario
 - **Buscar por código** — búsqueda exacta case-insensitive
-- **Aumentar/Disminuir stock** — control de cantidades y stock mínimo
+- **Aumentar/Disminuir stock** — control de cantidades y stock mínimo, con registro de motivo
 - **Eliminar producto** — baja por código
+- **Ver movimientos de inventario** — historial de entradas y salidas con fecha y motivo
 
 ## 🧱 Arquitectura
 
@@ -36,7 +37,8 @@ Carrera de Ingeniería de Sistemas e Informática
 src/
 ├── Main.java                        # UI por consola (menú + entrada de datos)
 ├── modelo/
-│   └── Producto.java                # Entidad del dominio
+│   ├── Producto.java                # Entidad del dominio
+│   └── MovimientoInventario.java    # Registro de entradas/salidas de stock
 ├── servicio/
 │   └── InventarioService.java       # Lógica de negocio + validaciones
 └── excepciones/

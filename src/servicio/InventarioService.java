@@ -7,6 +7,7 @@ import excepciones.DatoInvalidoException;
 import excepciones.ProductoDuplicadoException;
 import excepciones.ProductoNoEncontradoException;
 import excepciones.StockInsuficienteException;
+import modelo.MovimientoInventario;
 import modelo.Producto;
 
 public class InventarioService {
@@ -20,9 +21,13 @@ public class InventarioService {
     private static final int CANTIDAD_MAX = 999999;
 
     private List<Producto> productos;
+    private List<MovimientoInventario> movimientos;
+    private int siguienteIdMovimiento;
 
     public InventarioService() {
         this.productos = new ArrayList<>();
+        this.movimientos = new ArrayList<>();
+        this.siguienteIdMovimiento = 1;
     }
 
     public void registrarProducto(Producto producto)
@@ -59,7 +64,7 @@ public class InventarioService {
         );
     }
 
-    public void aumentarStock(String codigo, int cantidad)
+    public void aumentarStock(String codigo, int cantidad, String motivo)
             throws ProductoNoEncontradoException, DatoInvalidoException {
 
         validarCantidad(cantidad);
@@ -74,9 +79,10 @@ public class InventarioService {
         }
 
         producto.aumentarStock(cantidad);
+        registrarMovimiento(codigo, "ENTRADA", cantidad, motivo);
     }
 
-    public void disminuirStock(String codigo, int cantidad)
+    public void disminuirStock(String codigo, int cantidad, String motivo)
             throws ProductoNoEncontradoException, StockInsuficienteException, DatoInvalidoException {
 
         validarCantidad(cantidad);
@@ -90,6 +96,7 @@ public class InventarioService {
         }
 
         producto.disminuirStock(cantidad);
+        registrarMovimiento(codigo, "SALIDA", cantidad, motivo);
     }
 
     public void eliminarProducto(String codigo)
@@ -97,6 +104,17 @@ public class InventarioService {
 
         Producto producto = buscarProductoPorCodigo(codigo);
         productos.remove(producto);
+    }
+
+    public List<MovimientoInventario> listarMovimientos() {
+        return new ArrayList<>(movimientos);
+    }
+
+    private void registrarMovimiento(String productoCodigo, String tipo, int cantidad, String motivo) {
+        MovimientoInventario movimiento = new MovimientoInventario(
+                siguienteIdMovimiento++, productoCodigo, tipo, cantidad, motivo
+        );
+        movimientos.add(movimiento);
     }
 
     private boolean existeProducto(String codigo) {
