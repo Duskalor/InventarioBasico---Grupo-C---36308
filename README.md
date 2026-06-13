@@ -24,12 +24,20 @@ Carrera de Ingeniería de Sistemas e Informática
 
 ## ✨ Funcionalidades
 
-- **Registrar producto** — alta con validación de datos (código único, nombre, precio, stock)
-- **Listar productos** — vista completa del inventario
-- **Buscar por código** — búsqueda exacta case-insensitive
-- **Aumentar/Disminuir stock** — control de cantidades y stock mínimo, con registro de motivo
-- **Eliminar producto** — baja por código
+- **Crear producto** — alta con categoría, precio, stock y stock mínimo
+- **Listar productos** — vista completa del inventario con valor por producto
+- **Buscar por ID** — búsqueda exacta por ID numérico
+- **Actualizar producto** — modificar nombre, categoría, precio y stock mínimo
+- **Eliminar producto** — baja por ID
+- **Registrar entrada/salida de stock** — control de cantidades con motivo
 - **Ver movimientos de inventario** — historial de entradas y salidas con fecha y motivo
+- **Reportes:**
+  - Valor total del inventario
+  - Productos con stock bajo (stock > 0 y ≤ stock mínimo)
+  - Productos sin stock
+  - Cantidad de productos por categoría
+  - Stock total por categoría
+- **Datos iniciales** — 5 productos precargados al iniciar
 
 ## 🧱 Arquitectura
 
@@ -37,25 +45,21 @@ Carrera de Ingeniería de Sistemas e Informática
 src/
 ├── Main.java                        # UI por consola (menú + entrada de datos)
 ├── modelo/
-│   ├── Producto.java                # Entidad del dominio
+│   ├── Producto.java                # Entidad del dominio (categoría, stock mínimo)
 │   └── MovimientoInventario.java    # Registro de entradas/salidas de stock
-├── servicio/
-│   └── InventarioService.java       # Lógica de negocio + validaciones
-└── excepciones/
-    ├── DatoInvalidoException.java   # Campos vacíos, valores inválidos
-    ├── ProductoDuplicadoException.java
-    ├── ProductoNoEncontradoException.java
-    └── StockInsuficienteException.java
+└── servicio/
+    ├── ProductoService.java         # CRUD de productos
+    ├── InventarioService.java       # Lógica de movimientos de stock
+    └── ReporteService.java          # Reportes y consultas agregadas
 ```
 
 ### Capas
 
 | Capa | Responsabilidad |
 |------|----------------|
-| **Presentación** (`Main.java`) | Menú interactivo, lectura de datos, manejo de excepciones |
-| **Servicio** (`InventarioService`) | Reglas de negocio, validaciones, CRUD |
-| **Modelo** (`Producto`) | Representación del dominio |
-| **Excepciones** | Separación clara de errores de dominio |
+| **Presentación** (`Main.java`) | Menú interactivo, lectura de datos |
+| **Servicio** (`ProductoService`, `InventarioService`, `ReporteService`) | Reglas de negocio, CRUD, reportes |
+| **Modelo** (`Producto`, `MovimientoInventario`) | Representación del dominio |
 
 ## 🚀 Cómo ejecutar
 
@@ -70,47 +74,23 @@ javac -d bin (Get-ChildItem -Recurse src/*.java).FullName
 java -cp bin Main
 ```
 
-> Requiere **Java 8+**.
+> Requiere **Java 14+** (switch con flechas).
 
-## 🔐 Validaciones incluidas
+## 📋 Historial de versiones
 
-### Campos obligatorios
-- Código y nombre no pueden estar vacíos ni ser solo espacios
-
-### Código
-- Solo permite letras, números, guiones (`-`) y guiones bajos (`_`)
-- Longitud máxima: 20 caracteres
-- No se permiten códigos duplicados (búsqueda case-insensitive)
-- Búsqueda flexible con `equalsIgnoreCase`
-
-### Nombre
-- Longitud mínima: 2 caracteres
-- Longitud máxima: 100 caracteres
-
-### Precio
-- Debe ser mayor que cero
-- No puede exceder 999,999.99
-- No puede tener más de 2 decimales
-
-### Stock
-- No puede ser negativo
-- No puede exceder 999,999 unidades
-- Control de overflow al aumentar (no permite superar el máximo)
-
-### Cantidad (aumentar/disminuir)
-- Debe ser mayor que cero
-- No puede exceder 999,999
-
-### Entrada de usuario (consola)
-- Protección contra entrada inválida en números (letras no rompen el programa)
-- Validación con reintento hasta ingresar un valor correcto
+| Versión | Cambios |
+|---------|---------|
+| **v1.0** | Versión inicial: CRUD básico con validaciones, excepciones checked, código alfanumérico |
+| **v1.1** | Movimientos de inventario: registro de entradas/salidas con fecha, hora y motivo; aumentar/disminuir stock |
+| **v1.2** | Reportes, categorías y stock mínimo: ID numérico autoincremental, separación de servicios (`ProductoService` + `InventarioService`), `ReporteService` con 5 reportes, actualización de productos, datos iniciales precargados, `Optional` en lugar de excepciones |
 
 ## 🧠 Decisiones técnicas
 
-- **Excepciones checked** (`extends Exception`) — fuerzan el manejo en la capa de presentación
 - **Sin frameworks** — Java SE puro, sin Maven, Gradle ni librerías externas
 - **Datos en memoria** — `ArrayList<Producto>` sin persistencia (ideal para empezar)
-- **equalsIgnoreCase** — búsqueda flexible sin importar mayúsculas/minúsculas
+- **Optional** — búsquedas con `Optional` para evitar null pointer exceptions
+- **Separación de servicios** — `ProductoService` para CRUD, `InventarioService` para movimientos, `ReporteService` para consultas
+- **Switch con flechas** — sintaxis moderna de Java 14+ para mayor legibilidad
 
 ## 📌 Pendiente / Próximos pasos
 
