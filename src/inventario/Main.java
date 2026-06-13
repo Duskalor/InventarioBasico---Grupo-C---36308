@@ -10,6 +10,7 @@ public class Main {
     private static final InventarioService inventarioService = new InventarioService(productoService);
     private static final ReporteService reporteService = new ReporteService(productoService, inventarioService);
     private static final AlertaService alertaService = new AlertaService(productoService);
+    private static final DashboardService dashboardService = new DashboardService(productoService, reporteService, alertaService);
 
     public static void main(String[] args) {
         productoService.cargarDatosIniciales();
@@ -30,6 +31,7 @@ public class Main {
                 case 8 -> listarMovimientos();
                 case 9 -> menuReportes();
                 case 10 -> mostrarAlertas();
+                case 11 -> dashboardService.mostrarDashboard();
                 case 0 -> System.out.println("Saliendo del sistema...");
                 default -> System.out.println("Opción inválida.");
             }
@@ -37,7 +39,7 @@ public class Main {
     }
 
     private static void mostrarMenu() {
-        System.out.println("\n=== Sistema de Control de Inventarios v1.3 - Alertas ===");
+        System.out.println("\n=== Sistema de Control de Inventarios v2.0 - Dashboard ===");
         System.out.println("1. Crear producto");
         System.out.println("2. Listar productos");
         System.out.println("3. Buscar producto por ID");
@@ -48,6 +50,7 @@ public class Main {
         System.out.println("8. Ver movimientos de inventario");
         System.out.println("9. Reportes");
         System.out.println("10. Ver alertas de stock");
+        System.out.println("11. Dashboard general");
         System.out.println("0. Salir");
     }
 
