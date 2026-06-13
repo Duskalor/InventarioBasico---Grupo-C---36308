@@ -79,6 +79,68 @@ java -cp bin inventario.Main
 
 > Requiere **Java 14+** (switch con flechas).
 
+## 🧪 Tests Unitarios (JUnit 5)
+
+El proyecto incluye **41 tests unitarios** con **JUnit 5 (Jupiter)** sin Maven ni Gradle.
+
+### Estructura de tests
+
+```
+test/
+└── inventario/
+    ├── ProductoTest.java              (4 tests)
+    ├── ProductoServiceTest.java       (9 tests)
+    ├── InventarioServiceTest.java   (8 tests)
+    ├── MovimientoInventarioTest.java (3 tests)
+    ├── ReporteServiceTest.java      (7 tests)
+    ├── AlertaServiceTest.java       (5 tests)
+    └── DashboardServiceTest.java    (5 tests)
+```
+
+### Cobertura de tests
+
+| Clase | Tests | Qué verifica |
+|-------|-------|-------------|
+| `Producto` | Constructor, getters/setters, calcularValorInventario, toString | Entidad y cálculos |
+| `ProductoService` | CRUD, IDs incrementales, copia de lista, datos iniciales | Lógica de productos |
+| `InventarioService` | Entradas, salidas, movimientos, stock insuficiente, cantidad inválida | Control de stock |
+| `MovimientoInventario` | Constructor, getters, fecha, toString | Registro de movimiento |
+| `ReporteService` | Valor total, stock bajo, sin stock, categorías, últimos movimientos | Reportes |
+| `AlertaService` | Alertas crítica, advertencia, OK, combinaciones | Detección de riesgos |
+| `DashboardService` | mostrarDashboard sin excepciones, métricas, gráfico ASCII, alertas | Panel general |
+
+### Cómo ejecutar tests
+
+#### Opción 1: Script automático (Windows)
+```batch
+.\run-tests.bat
+```
+**Primera vez:** Descarga automáticamente JUnit 5 en `lib/`. Después solo compila y ejecuta.
+
+#### Opción 2: Script automático (Linux/macOS)
+```bash
+chmod +x run-tests.sh
+./run-tests.sh
+```
+
+#### Opción 3: Manual
+```batch
+# 1. Descargar JUnit (una sola vez)
+mkdir lib
+powershell -Command "Invoke-WebRequest -Uri 'https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.11.4/junit-platform-console-standalone-1.11.4.jar' -OutFile 'lib\junit-platform-console-standalone-1.11.4.jar'"
+
+# 2. Compilar fuentes
+javac -d bin -cp lib\junit-platform-console-standalone-1.11.4.jar src\inventario\*.java
+
+# 3. Compilar tests
+javac -d bin -cp lib\junit-platform-console-standalone-1.11.4.jar;bin test\inventario\*.java
+
+# 4. Ejecutar
+java -jar lib\junit-platform-console-standalone-1.11.4.jar --class-path bin --scan-class-path
+```
+
+---
+
 ## 📋 Historial de versiones
 
 | Versión | Cambios |
@@ -88,6 +150,7 @@ java -cp bin inventario.Main
 | **v1.2** | Reportes, categorías y stock mínimo: ID numérico autoincremental, separación de servicios (`ProductoService` + `InventarioService`), `ReporteService` con 5 reportes, actualización de productos, datos iniciales precargados, `Optional` en lugar de excepciones |
 | **v1.3** | Alertas de stock: `AlertaService` con alertas críticas (stock agotado) y advertencias (stock bajo con cantidad sugerida de compra), opción 10 en menú principal. Reestructuración a paquete `inventario` plano |
 | **v2.0** | Dashboard general: `DashboardService` con métricas clave (total productos, unidades en almacén, valor total, stock bajo/sin stock, producto de mayor valor), gráfico de barras ASCII por categoría, últimos 5 movimientos y alertas activas |
+| **v2.1** | Tests unitarios: 41 tests JUnit 5 para todas las clases del dominio |
 
 ## 🧠 Decisiones técnicas
 
@@ -96,11 +159,12 @@ java -cp bin inventario.Main
 - **Optional** — búsquedas con `Optional` para evitar null pointer exceptions
 - **Separación de servicios** — `ProductoService` para CRUD, `InventarioService` para movimientos, `ReporteService` para consultas, `AlertaService` para alertas, `DashboardService` para dashboard
 - **Switch con flechas** — sintaxis moderna de Java 14+ para mayor legibilidad
+- **Tests con JUnit 5** — JUnit Jupiter sin dependencias de build tools, descarga manual del standalone
 
 ## 📌 Pendiente / Próximos pasos
 
 - [ ] Persistencia a archivo (CSV, JSON, o serialización)
-- [ ] Tests unitarios (JUnit)
+- [x] Tests unitarios (JUnit) ✅
 - [ ] Interfaz gráfica (Swing/JavaFX)
 - [ ] Migración a Maven/Gradle
 - [ ] Conexión a base de datos
