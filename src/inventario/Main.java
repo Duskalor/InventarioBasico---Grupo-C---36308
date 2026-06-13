@@ -1,17 +1,15 @@
+package inventario;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
-import modelo.Producto;
-import servicio.InventarioService;
-import servicio.ProductoService;
-import servicio.ReporteService;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static final ProductoService productoService = new ProductoService();
     private static final InventarioService inventarioService = new InventarioService(productoService);
     private static final ReporteService reporteService = new ReporteService(productoService, inventarioService);
+    private static final AlertaService alertaService = new AlertaService(productoService);
 
     public static void main(String[] args) {
         productoService.cargarDatosIniciales();
@@ -31,6 +29,7 @@ public class Main {
                 case 7 -> registrarSalida();
                 case 8 -> listarMovimientos();
                 case 9 -> menuReportes();
+                case 10 -> mostrarAlertas();
                 case 0 -> System.out.println("Saliendo del sistema...");
                 default -> System.out.println("Opción inválida.");
             }
@@ -38,7 +37,7 @@ public class Main {
     }
 
     private static void mostrarMenu() {
-        System.out.println("\n=== Sistema de Control de Inventarios v1.2 ===");
+        System.out.println("\n=== Sistema de Control de Inventarios v1.3 - Alertas ===");
         System.out.println("1. Crear producto");
         System.out.println("2. Listar productos");
         System.out.println("3. Buscar producto por ID");
@@ -48,6 +47,7 @@ public class Main {
         System.out.println("7. Registrar salida de stock");
         System.out.println("8. Ver movimientos de inventario");
         System.out.println("9. Reportes");
+        System.out.println("10. Ver alertas de stock");
         System.out.println("0. Salir");
     }
 
@@ -115,7 +115,7 @@ public class Main {
 
     private static void listarMovimientos() {
         System.out.println("\n--- Movimientos de inventario ---");
-        var movimientos = inventarioService.listarMovimientos();
+        List<MovimientoInventario> movimientos = inventarioService.listarMovimientos();
         if (movimientos.isEmpty()) {
             System.out.println("No hay movimientos registrados.");
             return;
@@ -145,6 +145,11 @@ public class Main {
                 default -> System.out.println("Opción inválida.");
             }
         } while (opcion != 0);
+    }
+
+    private static void mostrarAlertas() {
+        System.out.println("\n--- Alertas del sistema ---");
+        alertaService.generarAlertas().forEach(System.out::println);
     }
 
     private static void imprimirListaProductos(List<Producto> productos, String mensajeVacio) {

@@ -1,11 +1,8 @@
-package servicio;
+package inventario;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import modelo.MovimientoInventario;
-import modelo.Producto;
 
 public class InventarioService {
     private final ProductoService productoService;

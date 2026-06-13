@@ -1,4 +1,4 @@
-package modelo;
+package inventario;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

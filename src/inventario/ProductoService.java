@@ -1,10 +1,8 @@
-package servicio;
+package inventario;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import modelo.Producto;
 
 public class ProductoService {
     private final List<Producto> productos = new ArrayList<>();
