@@ -15,6 +15,10 @@ run("InventarioServiceTest.registrarCantidadCero_lanzaExcepcion", () -> new Inve
 run("ReporteAlertaDashboardTest.reporte_calculaValorTotalInventario", () -> new ReporteAlertaDashboardTest().reporte_calculaValorTotalInventario());
 run("ReporteAlertaDashboardTest.alerta_detectaStockBajoYSinStock", () -> new ReporteAlertaDashboardTest().alerta_detectaStockBajoYSinStock());
 run("ReporteAlertaDashboardTest.dashboard_muestraResumenGeneral", () -> new ReporteAlertaDashboardTest().dashboard_muestraResumenGeneral());
+run("KataTddTest.stockKata_clasificaSinStockStockBajoYOk", () -> new KataTddTest().stockKata_clasificaSinStockStockBajoYOk());
+run("KataTddTest.stockKata_calculaReposicionHastaDobleDelMinimo", () -> new KataTddTest().stockKata_calculaReposicionHastaDobleDelMinimo());
+run("KataTddTest.stockKata_calculaValorTotalDeInventario", () -> new KataTddTest().stockKata_calculaValorTotalDeInventario());
+run("KataTddTest.skuKata_generaCodigoEstandarizado", () -> new KataTddTest().skuKata_generaCodigoEstandarizado());
         System.out.println("Pruebas ejecutadas: " + ejecutadas + ", fallidas: " + fallidas);
         if (fallidas > 0) {
             throw new AssertionError("Existen pruebas fallidas. Revise el detalle anterior.");

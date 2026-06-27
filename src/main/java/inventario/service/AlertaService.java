@@ -1,13 +1,13 @@
 package inventario.service;
 
-
+import inventario.kata.StockKata;
 import inventario.model.Producto;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlertaService {
     private final ProductoService productoService;
-
+    private final StockKata stockKata = new StockKata();
 
     public AlertaService(ProductoService productoService) {
         this.productoService = productoService;
@@ -18,11 +18,12 @@ public class AlertaService {
 
         for (Producto producto : productoService.listarProductos()) {
 
-        if (producto.getStock() == 0) {
+        String estado = stockKata.clasificarStock(producto.getStock(), producto.getStockMinimo());
+        if ("SIN_STOCK".equals(estado)) {
             alertas.add("CRITICA: " + producto.getNombre() + " no tiene stock. Reponer como minimo "
                     + producto.getStockMinimo() + " unidades.");
-        } else if (producto.getStock() <= producto.getStockMinimo()) {
-            int cantidadSugerida = (producto.getStockMinimo() * 2) - producto.getStock();
+        } else if ("STOCK_BAJO".equals(estado)) {
+            int cantidadSugerida = stockKata.calcularCantidadReposicion(producto.getStock(), producto.getStockMinimo());
             alertas.add("ADVERTENCIA: " + producto.getNombre() + " tiene stock bajo. Reposicion sugerida: "
                     + cantidadSugerida + " unidades.");
         }

@@ -14,3 +14,6 @@
 - Red: se escribieron pruebas para valor total del inventario y alertas.
 - Green: se implementaron `ReporteService`, `AlertaService` y `DashboardService`.
 - Refactor: se reutilizaron servicios existentes y se mantuvo una salida de dashboard como texto verificable.
+
+
+Ver tambien `docs/KATAS_TDD.md`.

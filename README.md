@@ -1,37 +1,21 @@
-# v3.0 - Pruebas unitarias y TDD
+# v3.1 - Katas TDD y refactorizacion
 
-Esta version agrega pruebas unitarias al Sistema de Control de Inventarios. El codigo esta separado en capas: `model`, `repository`, `service` y `tests`.
+Esta version conserva las pruebas de v3.0 y agrega Katas TDD para resolver problemas pequeños de forma iterativa.
 
-## Objetivo academico
-- Validar CRUD de productos.
-- Validar entradas y salidas de inventario.
-- Validar reportes, alertas y dashboard.
-- Evidenciar el ciclo TDD Red-Green-Refactor mediante pruebas automatizadas.
+## Katas incluidas
+- `StockKata`: clasificacion de stock, cantidad sugerida de reposicion y valor total del inventario.
+- `SkuKata`: generacion de codigos SKU estandarizados.
 
 ## Ejecutar pruebas
-
-Linux/macOS/Git Bash:
 
 ```bash
 bash scripts/test.sh
 ```
 
-Windows CMD:
-
-```bat
-scripts\test.bat
-```
-
-## Ejecutar sistema
-
-```bash
-bash scripts/run.sh
-```
-
 ## Commit sugerido
 
 ```bash
-git add v3.0-pruebas-unitarias-tdd
-git commit -m "test: agregar pruebas unitarias y ciclo TDD inicial"
-git tag v3.0-pruebas-unitarias-tdd
+git add v3.1-katas-tdd-refactor
+git commit -m "feat(kata): agregar katas TDD de stock y SKU"
+git tag v3.1-katas-tdd-refactor
 ```

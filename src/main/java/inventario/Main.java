@@ -19,7 +19,7 @@ public class Main {
         inventarioService.registrarEntrada(1, 2, "Compra inicial");
         inventarioService.registrarSalida(3, 4, "Venta inicial");
 
-        System.out.println("Sistema de Control de Inventarios - v3.0 Pruebas Unitarias y TDD");
+        System.out.println("Sistema de Control de Inventarios - v3.1 Katas TDD y Refactor");
         System.out.println(dashboardService.generarResumenDashboard());
         System.out.println("Ejecute scripts/test.sh para validar las pruebas unitarias.");
     }
