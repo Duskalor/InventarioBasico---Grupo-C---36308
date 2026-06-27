@@ -1,22 +1,25 @@
-package inventario;
+package inventario.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MovimientoInventario {
-    private int id;
-    private int productoId;
-    private String tipo;
-    private int cantidad;
-    private String motivo;
-    private LocalDateTime fecha;
+    private final int id;
+    private final int productoId;
+    private final String tipo;
+    private final int cantidad;
+    private final String motivo;
+    private final LocalDateTime fecha;
 
     public MovimientoInventario(int id, int productoId, String tipo, int cantidad, String motivo) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+        }
         this.id = id;
         this.productoId = productoId;
         this.tipo = tipo;
         this.cantidad = cantidad;
-        this.motivo = motivo;
+        this.motivo = motivo == null ? "Sin motivo" : motivo;
         this.fecha = LocalDateTime.now();
     }
 

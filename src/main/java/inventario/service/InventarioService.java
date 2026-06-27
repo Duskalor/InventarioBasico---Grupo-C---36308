@@ -1,5 +1,7 @@
-package inventario;
+package inventario.service;
 
+import inventario.model.MovimientoInventario;
+import inventario.model.Producto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +16,7 @@ public class InventarioService {
     }
 
     public boolean registrarEntrada(int productoId, int cantidad, String motivo) {
-        if (cantidad <= 0) {
-            System.out.println("La cantidad debe ser mayor que cero.");
-            return false;
-        }
-
+        validarCantidad(cantidad);
         Optional<Producto> productoEncontrado = productoService.buscarPorId(productoId);
         if (productoEncontrado.isEmpty()) {
             return false;
@@ -31,11 +29,7 @@ public class InventarioService {
     }
 
     public boolean registrarSalida(int productoId, int cantidad, String motivo) {
-        if (cantidad <= 0) {
-            System.out.println("La cantidad debe ser mayor que cero.");
-            return false;
-        }
-
+        validarCantidad(cantidad);
         Optional<Producto> productoEncontrado = productoService.buscarPorId(productoId);
         if (productoEncontrado.isEmpty()) {
             return false;
@@ -43,7 +37,6 @@ public class InventarioService {
 
         Producto producto = productoEncontrado.get();
         if (producto.getStock() < cantidad) {
-            System.out.println("Stock insuficiente. Stock actual: " + producto.getStock());
             return false;
         }
 
@@ -54,5 +47,11 @@ public class InventarioService {
 
     public List<MovimientoInventario> listarMovimientos() {
         return new ArrayList<>(movimientos);
+    }
+
+    private void validarCantidad(int cantidad) {
+        if (cantidad <= 0) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que cero.");
+        }
     }
 }

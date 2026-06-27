@@ -1,27 +1,30 @@
-package inventario;
+package inventario.service;
 
-import java.util.ArrayList;
+import inventario.model.Producto;
+import inventario.repository.ProductoRepository;
 import java.util.List;
 import java.util.Optional;
 
 public class ProductoService {
-    private final List<Producto> productos = new ArrayList<>();
-    private int siguienteId = 1;
+    private final ProductoRepository repository;
+    private int siguienteId;
+
+    public ProductoService(ProductoRepository repository) {
+        this.repository = repository;
+        this.siguienteId = repository.findAll().stream().mapToInt(Producto::getId).max().orElse(0) + 1;
+    }
 
     public Producto crearProducto(String nombre, String categoria, double precio, int stockInicial, int stockMinimo) {
         Producto producto = new Producto(siguienteId++, nombre, categoria, precio, stockInicial, stockMinimo);
-        productos.add(producto);
-        return producto;
+        return repository.save(producto);
     }
 
     public List<Producto> listarProductos() {
-        return new ArrayList<>(productos);
+        return repository.findAll();
     }
 
     public Optional<Producto> buscarPorId(int id) {
-        return productos.stream()
-                .filter(producto -> producto.getId() == id)
-                .findFirst();
+        return repository.findById(id);
     }
 
     public boolean actualizarProducto(int id, String nombre, String categoria, double precio, int stockMinimo) {
@@ -35,14 +38,18 @@ public class ProductoService {
         producto.setCategoria(categoria);
         producto.setPrecio(precio);
         producto.setStockMinimo(stockMinimo);
+        repository.save(producto);
         return true;
     }
 
     public boolean eliminarProducto(int id) {
-        return productos.removeIf(producto -> producto.getId() == id);
+        return repository.deleteById(id);
     }
 
     public void cargarDatosIniciales() {
+        if (!listarProductos().isEmpty()) {
+            return;
+        }
         crearProducto("Laptop Lenovo ThinkPad", "Computo", 3500.00, 8, 3);
         crearProducto("Switch Cisco 24 puertos", "Redes", 2100.00, 5, 4);
         crearProducto("Disco SSD 1TB", "Almacenamiento", 360.00, 25, 10);
