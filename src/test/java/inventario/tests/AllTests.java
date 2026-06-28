@@ -19,6 +19,9 @@ run("KataTddTest.stockKata_clasificaSinStockStockBajoYOk", () -> new KataTddTest
 run("KataTddTest.stockKata_calculaReposicionHastaDobleDelMinimo", () -> new KataTddTest().stockKata_calculaReposicionHastaDobleDelMinimo());
 run("KataTddTest.stockKata_calculaValorTotalDeInventario", () -> new KataTddTest().stockKata_calculaValorTotalDeInventario());
 run("KataTddTest.skuKata_generaCodigoEstandarizado", () -> new KataTddTest().skuKata_generaCodigoEstandarizado());
+run("OrmRepositoryTest.ormMetadata_detectaTablaYColumnas", () -> new OrmRepositoryTest().ormMetadata_detectaTablaYColumnas());
+run("OrmRepositoryTest.ormRepository_guardaYRecuperaProducto", () -> new OrmRepositoryTest().ormRepository_guardaYRecuperaProducto());
+run("OrmRepositoryTest.ormRepository_actualizaYEliminaProducto", () -> new OrmRepositoryTest().ormRepository_actualizaYEliminaProducto());
         System.out.println("Pruebas ejecutadas: " + ejecutadas + ", fallidas: " + fallidas);
         if (fallidas > 0) {
             throw new AssertionError("Existen pruebas fallidas. Revise el detalle anterior.");

@@ -1,0 +1,21 @@
+# Compiled output
+out/
+bin/
+*.class
+
+# Build helper files
+sources.txt
+
+# Local ORM persistence
+data/
+
+# Dependencies
+lib/
+
+# Agent tooling
+.atl/
+
+# IDE
+.idea/
+.vscode/
+*.iml

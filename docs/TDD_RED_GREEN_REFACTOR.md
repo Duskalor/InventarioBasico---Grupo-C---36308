@@ -17,3 +17,9 @@
 
 
 Ver tambien `docs/KATAS_TDD.md`.
+
+
+## Iteracion 4: ORM
+- Red: se agregaron pruebas para guardar y recuperar productos usando repositorio ORM.
+- Green: se implemento `CsvOrmRepository` con anotaciones `@Table`, `@Column` e `@Id`.
+- Refactor: `ProductoService` trabaja contra la interfaz `ProductoRepository`, manteniendo bajo acoplamiento.
